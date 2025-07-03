@@ -1,9 +1,12 @@
 package com.slilio.ai.robot.controller;
 
+import com.slilio.ai.robot.model.AIResponse;
 import jakarta.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,15 +44,19 @@ public class AliyunBailianController {
      * @param message
      * @return
      */
-    @GetMapping(value = "generateStream",produces = "text/html;charset=utf-8")
-    public Flux<String> generateStream(@RequestParam(value = "message",defaultValue = "你是谁")String message){
+    @GetMapping(value = "generateStream",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<AIResponse> generateStream(@RequestParam(value = "message",defaultValue = "你是谁")String message){
         Prompt prompt = new Prompt(message);
 
         //流式输出
         return openAiChatModel.stream(prompt)
                 .mapNotNull(chatResponse -> {
                     Generation generation = chatResponse.getResult();
-                    return Objects.nonNull(generation) ? generation.getOutput().getText() : null;
+                    String text = generation.getOutput().getText();
+
+                    return StringUtils.isNotBlank(text)?
+                            AIResponse.builder().v(text).build() : AIResponse.builder().v("").build();
+
                 });
     }
 }
