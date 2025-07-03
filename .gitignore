@@ -35,3 +35,5 @@ build/
 *.log
 application-dev.yml
 application-prod.yml
+*gitignore
+*gitattributes
