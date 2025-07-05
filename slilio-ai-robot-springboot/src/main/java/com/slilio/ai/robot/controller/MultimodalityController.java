@@ -8,7 +8,7 @@ import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.content.Media;
-import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +23,9 @@ import reactor.core.publisher.Flux;
 @RestController
 @RequestMapping("/v9/ai")
 public class MultimodalityController {
-  //  @Resource private OpenAiChatModel openAiChatModel;
-  @Resource private OllamaChatModel ollamaChatModel;
+  @Resource private OpenAiChatModel openAiChatModel;
+
+  //  @Resource private OllamaChatModel ollamaChatModel;
 
   /**
    * 流式对话
@@ -35,9 +36,10 @@ public class MultimodalityController {
   @GetMapping(value = "/generateStream", produces = "text/html;charset=utf-8")
   public Flux<String> generateStream(@RequestParam(value = "message") String message) {
     // 1.创建媒体资源
+    Media image =
+        new Media(MimeTypeUtils.IMAGE_JPEG, new ClassPathResource("/images/multimodal-test.jpg"));
     //    Media image = new Media(MimeTypeUtils.IMAGE_JPEG, new
-    // ClassPathResource("/images/multimodal-test.jpg"));
-    Media image = new Media(MimeTypeUtils.IMAGE_JPEG, new ClassPathResource("/images/demo.jpg"));
+    // ClassPathResource("/images/demo.jpg"));
 
     // 2.附件选项(可选) ，如温度值等等
     Map<String, Object> metadata = new HashMap<>();
@@ -50,17 +52,17 @@ public class MultimodalityController {
     // 4.构建提示词
     Prompt prompt = new Prompt(List.of(userMessage));
     // 5.流式调用
-    //    return openAiChatModel.stream(prompt)
-    //        .mapNotNull(
-    //            chatResponse -> {
-    //              Generation generation = chatResponse.getResult();
-    //              return generation.getOutput().getText();
-    //            });
-    return ollamaChatModel.stream(prompt)
+    return openAiChatModel.stream(prompt)
         .mapNotNull(
             chatResponse -> {
               Generation generation = chatResponse.getResult();
               return generation.getOutput().getText();
             });
+    //    return ollamaChatModel.stream(prompt)
+    //        .mapNotNull(
+    //            chatResponse -> {
+    //              Generation generation = chatResponse.getResult();
+    //              return generation.getOutput().getText();
+    //            });
   }
 }

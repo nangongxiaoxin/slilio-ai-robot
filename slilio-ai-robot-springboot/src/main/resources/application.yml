@@ -29,7 +29,7 @@ spring:
       base-url: http://localhost:11434 # Ollama 服务的访问地址, 11434 端口是 Ollama 默认的启动端口
       chat:
         options: # 模型参数
-          model: qwen3:1.7b # 指定 Ollama 使用的大模型名称，根据你实际安装的来，我运行的是 14b
+          model: qwen3:1.7b # 指定 Ollama 使用的大模型名称
           temperature: 0.7 # 温度值
     zhipuai:
       base-url: https://open.bigmodel.cn/api/paas # 智谱 AI 的请求 URL, 可不填，默认值为 open.bigmodel.cn/api/paas
