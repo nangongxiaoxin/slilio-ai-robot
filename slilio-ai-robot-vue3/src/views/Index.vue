@@ -28,7 +28,7 @@
     </div>
 
     <!-- 提问输入框 -->
-    <div class="absolute bottom-0 left-0 w-full mb-5">
+    <div class="absolute bottom-0 w-[80%] mb-5 left-1/2 -translate-x-1/2">
       <div class="bg-gray-100 rounded-3xl px-4 py-3 mx-4 border border-gray-200 flex flex-col">
         <textarea v-model="message" placeholder="向AI机器人发送消息" class="bg-transparent border-none outline-none w-full text-sm resize-none min-h-[24px]" rows="2" @input="autoResize" @keydown.enter.prevent="sendMessage" ref="textareaRef"> </textarea>
 
@@ -98,7 +98,10 @@ const sendMessage = async () => {
 
   try {
     //创建SSE链接
-    eventSource = new EventSource(`http://localhost:8080/v6/ai/generateStream?message=${encodeURIComponent(userMessage)}`);
+    // eventSource = new EventSource(`http://localhost:8080/v6/ai/generateStream?message=${encodeURIComponent(userMessage)}`);
+    // eventSource = new EventSource(`http://localhost:8080/v7/ai/generateStream?message=${encodeURIComponent(userMessage)}&lang=Java`)
+    // eventSource = new EventSource(`http://localhost:8080/v7/ai/generateStream2?message=${encodeURIComponent(userMessage)}&lang=Java`)
+    eventSource = new EventSource(`http://localhost:8080/v7/ai/generateStream3?message=${encodeURIComponent(userMessage)}&lang=Java`)
     //响应的回答
     let responseText = "";
     //处理消息事件
