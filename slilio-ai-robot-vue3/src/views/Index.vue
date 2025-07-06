@@ -16,7 +16,7 @@
           <!-- 头像 -->
           <div class="flex-shrink-0 mr-3">
             <div class="w-8 h-8 rounded-full flex items-center justify-center border border-gray-200">
-              <SvgIcon name="deepseek-logo" customCss="w-5 h-5"></SvgIcon>
+              <SvgIcon name="ai-boot" customCss="w-5 h-5"></SvgIcon>
             </div>
           </div>
           <!-- 回复的内容 -->
@@ -99,9 +99,10 @@ const sendMessage = async () => {
   try {
     //创建SSE链接
     // eventSource = new EventSource(`http://localhost:8080/v6/ai/generateStream?message=${encodeURIComponent(userMessage)}`);
-    // eventSource = new EventSource(`http://localhost:8080/v7/ai/generateStream?message=${encodeURIComponent(userMessage)}&lang=Java`)
+    eventSource = new EventSource(`http://localhost:8080/v6/ai/generateStream?message=${encodeURIComponent(userMessage)}&chatId=101`);
+    //  eventSource = new EventSource(`http://localhost:8080/v7/ai/generateStream?message=${encodeURIComponent(userMessage)}&lang=Java`)
     // eventSource = new EventSource(`http://localhost:8080/v7/ai/generateStream2?message=${encodeURIComponent(userMessage)}&lang=Java`)
-    eventSource = new EventSource(`http://localhost:8080/v7/ai/generateStream3?message=${encodeURIComponent(userMessage)}&lang=Java`)
+    //eventSource = new EventSource(`http://localhost:8080/v7/ai/generateStream3?message=${encodeURIComponent(userMessage)}&lang=Java`)
     //响应的回答
     let responseText = "";
     //处理消息事件

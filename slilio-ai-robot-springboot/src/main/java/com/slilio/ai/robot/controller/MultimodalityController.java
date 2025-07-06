@@ -36,10 +36,9 @@ public class MultimodalityController {
   @GetMapping(value = "/generateStream", produces = "text/html;charset=utf-8")
   public Flux<String> generateStream(@RequestParam(value = "message") String message) {
     // 1.创建媒体资源
-    Media image =
-        new Media(MimeTypeUtils.IMAGE_JPEG, new ClassPathResource("/images/multimodal-test.jpg"));
     //    Media image = new Media(MimeTypeUtils.IMAGE_JPEG, new
-    // ClassPathResource("/images/demo.jpg"));
+    // ClassPathResource("/images/multimodal-test.jpg"));
+    Media image = new Media(MimeTypeUtils.IMAGE_JPEG, new ClassPathResource("/images/demo.jpg"));
 
     // 2.附件选项(可选) ，如温度值等等
     Map<String, Object> metadata = new HashMap<>();

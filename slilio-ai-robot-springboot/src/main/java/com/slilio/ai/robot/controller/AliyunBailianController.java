@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
-import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -74,13 +73,27 @@ public class AliyunBailianController {
    */
   @GetMapping(value = "generateStream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
   public Flux<AIResponse> generateStream(
-      @RequestParam(value = "message", defaultValue = "你是谁") String message) {
+      @RequestParam(value = "message", defaultValue = "你是谁") String message,
+      @RequestParam(value = "chatId") String chatId) {
+
     // 系统角色信息
-    SystemMessage systemMessage = new SystemMessage("请你扮演一名 Java 项目实战专栏的客服人员");
+    //    SystemMessage systemMessage = new SystemMessage("请你扮演一名聊天助手");
+
     // 用户角色信息
     UserMessage userMessage = new UserMessage(message);
+
+    // 根据chatID获取对话记录
+    List<Message> messages = chatMemoryStore.get(chatId);
+    // 如果不存在，则初始化一份
+    if (CollectionUtils.isEmpty(messages)) {
+      messages = new ArrayList<>();
+      chatMemoryStore.put(chatId, messages);
+    }
+    messages.add(userMessage);
+    //    messages.add(systemMessage);
+
     // 构建提示词
-    Prompt prompt = new Prompt(Arrays.asList(systemMessage, userMessage));
+    Prompt prompt = new Prompt(messages);
 
     // 流式输出
     return openAiChatModel.stream(prompt)
